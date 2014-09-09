@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["takuya.tsuchida@spontena.com"]
   spec.summary       = %q{Pandorabots API module for Ruby.}
   spec.description   = ""
-  spec.homepage      = "https://github.com/spontena/pb-ruby.git"
+  spec.homepage      = "https://github.com/spontena/pb-ruby"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
