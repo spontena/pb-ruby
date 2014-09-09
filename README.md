@@ -6,7 +6,7 @@ Pandorabots API module for Ruby. Please read the [documentation](http://develope
 
 Add this line to your application's Gemfile:
 
-    gem 'pandorabots'
+    gem 'pandorabots_api'
 
 And then execute:
 
@@ -14,11 +14,11 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install pandorabots
+    $ gem install pandorabots_api
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/pandorabots/fork )
+1. Fork it (https://github.com/spontena/pb-ruby/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
