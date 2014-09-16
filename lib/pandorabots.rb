@@ -11,25 +11,25 @@ module Pandorabots
         properties: 'properties', pdefaults: 'pdefaults'
       }
 
-      def create_bot(username, botname, user_key:)
-        request_uri = "/bot/#{username}/#{botname}?user_key=#{user_key}"
+      def create_bot(app_id, botname, user_key:)
+        request_uri = "/bot/#{app_id}/#{botname}?user_key=#{user_key}"
         put = Net::HTTP::Put.new(URI.escape(request_uri))
         response = https.request(put)
         succeed_creation?(response)
       end
 
-      def delete_bot(username, botname, user_key:)
-        request_uri = "/bot/#{username}/#{botname}?user_key=#{user_key}"
+      def delete_bot(app_id, botname, user_key:)
+        request_uri = "/bot/#{app_id}/#{botname}?user_key=#{user_key}"
         delete = Net::HTTP::Delete.new(URI.escape(request_uri))
         response = https.request(delete)
         succeed_deletion?(response)
       end
 
-      def upload_file(username, botname, file,
+      def upload_file(app_id, botname, file,
                       file_kind: '', filename: '', user_key:)
         file_kind = file_kind(file) if file_kind.empty?
         filename = filename(file) if filename.empty?
-        request_uri = upload_file_uri(username, botname, file_kind,
+        request_uri = upload_file_uri(app_id, botname, file_kind,
                                       filename, user_key)
         put = Net::HTTP::Put.new(URI.escape(request_uri))
         put.body = file.read
@@ -37,16 +37,16 @@ module Pandorabots
         succeed_upload?(response)
       end
 
-      def compile_bot(username, botname, user_key:)
-        request_uri = "/bot/#{username}/#{botname}/verify?user_key=#{user_key}"
+      def compile_bot(app_id, botname, user_key:)
+        request_uri = "/bot/#{app_id}/#{botname}/verify?user_key=#{user_key}"
         get = Net::HTTP::Get.new(URI.escape(request_uri))
         response = https.request(get)
         succeed_compilation?(response)
       end
 
-      def talk(username, botname, input, sessionid: '', reset: false,
+      def talk(app_id, botname, input, sessionid: '', reset: false,
                trace: false, recent: true, user_key:)
-        request_uri = "/talk/#{username}/#{botname}?input=#{input}" \
+        request_uri = "/talk/#{app_id}/#{botname}?input=#{input}" \
                       "&sessionid=#{sessionid}&reset=#{reset}&trace=#{trace}" \
                       "&user_key=#{user_key}"
         post = Net::HTTP::Post.new(URI.escape(request_uri))
@@ -72,8 +72,8 @@ module Pandorabots
         FILE_KIND[extname.to_sym]
       end
 
-      def upload_file_uri(username, botname, file_kind, filename, user_key)
-        request_uri = "/bot/#{username}/#{botname}/#{file_kind}"
+      def upload_file_uri(app_id, botname, file_kind, filename, user_key)
+        request_uri = "/bot/#{app_id}/#{botname}/#{file_kind}"
         request_uri << "/#{filename}" if need_filename?(file_kind)
         request_uri << "?user_key=#{user_key}"
       end
