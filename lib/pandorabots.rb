@@ -51,7 +51,9 @@ module Pandorabots
                       "&recent=#{recent}&user_key=#{user_key}"
         post = Net::HTTP::Post.new(URI.escape(request_uri))
         response = https.request(post)
-        TalkResult.new(response.body) if succeed_talk?(response)
+        response_json = JSON.parse(response.body) if succeed_talk?(response)
+        response_json
+        # TalkResult.new(response.body) if succeed_talk?(response)
       end
 
       private
