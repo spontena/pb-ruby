@@ -48,7 +48,7 @@ module Pandorabots
 
       def talk(app_id, botname, input, client_name, sessionid: '', reset: false,
                trace: false, recent: false, user_key:)
-        request_uri = "/talk/#{app_id}/#{botname}?input=#{input}&client_name=#{client_name}" \
+        request_uri = "/atalk/#{app_id}/#{botname}?input=#{input}&client_name=#{client_name}" \
                       "&sessionid=#{sessionid}&reset=#{reset}&trace=#{trace}" \
                       "&recent=#{recent}&user_key=#{user_key}"
         post_uri = URI(BASE_URL + request_uri)
