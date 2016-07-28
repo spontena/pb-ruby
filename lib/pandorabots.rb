@@ -5,7 +5,7 @@ require 'json'
 module Pandorabots
   class API
     class << self
-      @@https ||= set_https
+      @@https
       BASE_URL = 'https://aiaas.pandorabots.com'
       FILE_KIND = {
         aiml: 'file', set: 'set', map: 'map', substitution: 'substitution',
@@ -59,11 +59,11 @@ module Pandorabots
 
       private
 
-      def set_https
+      def self.https
         uri = URI(BASE_URL)
         https = Net::HTTP.new(uri.host, uri.port)
         https.use_ssl = true
-        https
+        @@https || = https
       end
 
       def filename(file)
