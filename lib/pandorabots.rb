@@ -49,9 +49,9 @@ module Pandorabots
         request_uri = "/talk/#{app_id}/#{botname}?input=#{input}&client_name=#{client_name}" \
                       "&sessionid=#{sessionid}&reset=#{reset}&trace=#{trace}" \
                       "&recent=#{recent}&user_key=#{user_key}"
-        uri = URI(BASE_URL)
-        post = Net::HTTP::Post.new(uri + URI.escape(request_uri))
-        response = https.request(post)
+        post_uri = URI(BASE_URL) + URI.escape(request_uri)
+        post = Net::HTTP::Post.new(URI.escape(request_uri))
+        response = https.request(post_uri, post)
         response_json = JSON.parse(response.body) if succeed_talk?(response)
         response_json
         # TalkResult.new(response.body) if succeed_talk?(response)
