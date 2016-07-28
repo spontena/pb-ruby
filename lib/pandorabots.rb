@@ -1,5 +1,5 @@
 require 'pandorabots/version'
-require 'net/https'
+require 'net/https/persistent'
 require 'json'
 
 module Pandorabots
