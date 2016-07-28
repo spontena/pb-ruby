@@ -1,10 +1,11 @@
 require 'pandorabots/version'
-require 'net/http/persistent'
+require 'net/https'
 require 'json'
 
 module Pandorabots
   class API
     class << self
+      @@https ||= set_https
       BASE_URL = 'https://aiaas.pandorabots.com'
       FILE_KIND = {
         aiml: 'file', set: 'set', map: 'map', substitution: 'substitution',
@@ -14,14 +15,14 @@ module Pandorabots
       def create_bot(app_id, botname, user_key:)
         request_uri = "/bot/#{app_id}/#{botname}?user_key=#{user_key}"
         put = Net::HTTP::Put.new(URI.escape(request_uri))
-        response = https.request(put)
+        response = @@https.request(put)
         succeed_creation?(response)
       end
 
       def delete_bot(app_id, botname, user_key:)
         request_uri = "/bot/#{app_id}/#{botname}?user_key=#{user_key}"
         delete = Net::HTTP::Delete.new(URI.escape(request_uri))
-        response = https.request(delete)
+        response = @@https.request(delete)
         succeed_deletion?(response)
       end
 
@@ -33,14 +34,14 @@ module Pandorabots
                                       filename, user_key)
         put = Net::HTTP::Put.new(URI.escape(request_uri))
         put.body = file.read
-        response = https.request(put)
+        response = @@https.request(put)
         succeed_upload?(response)
       end
 
       def compile_bot(app_id, botname, user_key:)
         request_uri = "/bot/#{app_id}/#{botname}/verify?user_key=#{user_key}"
         get = Net::HTTP::Get.new(URI.escape(request_uri))
-        response = https.request(get)
+        response = @@https.request(get)
         succeed_compilation?(response)
       end
 
@@ -49,9 +50,8 @@ module Pandorabots
         request_uri = "/talk/#{app_id}/#{botname}?input=#{input}&client_name=#{client_name}" \
                       "&sessionid=#{sessionid}&reset=#{reset}&trace=#{trace}" \
                       "&recent=#{recent}&user_key=#{user_key}"
-        post_uri = URI(BASE_URL) + URI.escape(request_uri)
         post = Net::HTTP::Post.new(URI.escape(request_uri))
-        response = https.request(post_uri, post)
+        response = @@https.request(post)
         response_json = JSON.parse(response.body) if succeed_talk?(response)
         response_json
         # TalkResult.new(response.body) if succeed_talk?(response)
@@ -59,11 +59,10 @@ module Pandorabots
 
       private
 
-      def https
-
-        # (uri.host, uri.port)
-        https = Net::HTTP::Persistent.new 'pb-ruby'
-        # https.use_ssl = true
+      def set_https
+        uri = URI(BASE_URL)
+        https = Net::HTTP.new(uri.host, uri.port))
+        https.use_ssl = true
         https
       end
 
