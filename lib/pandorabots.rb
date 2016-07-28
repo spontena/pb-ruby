@@ -57,14 +57,15 @@ module Pandorabots
         # TalkResult.new(response.body) if succeed_talk?(response)
       end
 
-      private
-
       def self.https
         uri = URI(BASE_URL)
         https = Net::HTTP.new(uri.host, uri.port)
         https.use_ssl = true
         @@https ||= https
       end
+      
+      private
+
 
       def filename(file)
         File.basename(file, '.*')
