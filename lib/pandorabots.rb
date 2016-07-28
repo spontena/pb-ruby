@@ -49,7 +49,8 @@ module Pandorabots
         request_uri = "/talk/#{app_id}/#{botname}?input=#{input}&client_name=#{client_name}" \
                       "&sessionid=#{sessionid}&reset=#{reset}&trace=#{trace}" \
                       "&recent=#{recent}&user_key=#{user_key}"
-        post = Net::HTTP::Post.new(URI.escape(request_uri))
+        uri = URI(BASE_URL)
+        post = Net::HTTP::Post.new(uri + URI.escape(request_uri))
         response = https.request(post)
         response_json = JSON.parse(response.body) if succeed_talk?(response)
         response_json
@@ -59,8 +60,9 @@ module Pandorabots
       private
 
       def https
-        uri = URI(BASE_URL)
-        https = Net::HTTP::Persistent.new(uri.host, uri.port)
+
+        # (uri.host, uri.port)
+        https = Net::HTTP::Persistent.new 'pb-ruby'
         https.use_ssl = true
         https
       end
