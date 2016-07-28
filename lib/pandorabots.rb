@@ -59,10 +59,13 @@ module Pandorabots
       end
 
       def https
+        @https ||= set_https
+      end
+
+      def set_https
         uri = URI(BASE_URL)
         set_https = Net::HTTP.new(uri.host, uri.port)
         set_https.use_ssl = true
-        @https ||= set_https
       end
 
       private
