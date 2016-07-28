@@ -63,7 +63,7 @@ module Pandorabots
 
         # (uri.host, uri.port)
         https = Net::HTTP::Persistent.new 'pb-ruby'
-        https.use_ssl = true
+        # https.use_ssl = true
         https
       end
 
