@@ -4,13 +4,26 @@ require 'json'
 
 module Pandorabots
   class API
+    @@https
     class << self
-      @@https
+      attr_accessor :https
+
       BASE_URL = 'https://aiaas.pandorabots.com'
       FILE_KIND = {
         aiml: 'file', set: 'set', map: 'map', substitution: 'substitution',
         properties: 'properties', pdefaults: 'pdefaults'
       }
+
+      def get_https
+        @@https
+      end
+
+      def set_https
+        uri = URI(BASE_URL)
+        https = Net::HTTP.new(uri.host, uri.port)
+        https.use_ssl = true
+        self.https = https  
+      end
 
       def create_bot(app_id, botname, user_key:)
         request_uri = "/bot/#{app_id}/#{botname}?user_key=#{user_key}"
@@ -55,14 +68,6 @@ module Pandorabots
         response_json = JSON.parse(response.body) if succeed_talk?(response)
         response_json
         # TalkResult.new(response.body) if succeed_talk?(response)
-      end
-
-      def self.https
-        uri = URI(BASE_URL)
-        https = Net::HTTP.new(uri.host, uri.port)
-        https.use_ssl = true
-        @@https ||= https
-        @@https
       end
 
       private
