@@ -46,7 +46,7 @@ module Pandorabots
         succeed_compilation?(response)
       end
 
-      def talk(app_id, botname, input, client_name, sessionid: '', reset: false,
+      def talk(app_id, botname, input, client_name: '', sessionid: '', reset: false,
                trace: false, recent: false, user_key:)
         request_uri = "/atalk/#{app_id}/#{botname}?input=#{input}&client_name=#{client_name}" \
                       "&sessionid=#{sessionid}&reset=#{reset}&trace=#{trace}" \
