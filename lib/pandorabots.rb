@@ -1,5 +1,5 @@
 require 'pandorabots/version'
-require 'net/http/persistent'
+require 'net/https'
 require 'json'
 
 module Pandorabots
@@ -46,14 +46,13 @@ module Pandorabots
         succeed_compilation?(response)
       end
 
-      def talk(app_id, botname, input, client_name: '', sessionid: '', reset: false,
+      def talk(app_id, botname, input, client_name, sessionid: '', reset: false,
                trace: false, recent: false, user_key:)
-        request_uri = "/atalk/#{app_id}/#{botname}?input=#{input}&client_name=#{client_name}" \
-                      "&sessionid=#{sessionid}&reset=#{reset}&trace=#{trace}" \
-                      "&recent=#{recent}&user_key=#{user_key}"
-        post_uri = URI(BASE_URL + request_uri)
+        request_uri = "/talk/#{app_id}/#{botname}?input=#{input}&client_name=#{client_name}&user_key=#{user_key}"
+                      # "&sessionid=#{sessionid}&reset=#{reset}&trace=#{trace}" \ "&recent=#{recent}
+        # post_uri = URI(BASE_URL + request_uri), post_uri,
         post = Net::HTTP::Post.new(URI.escape(request_uri))
-        response = https.request(post_uri, post)
+        response = https.request(post)
         response_json = JSON.parse(response.body) if succeed_talk?(response)
         response_json
         # TalkResult.new(response.body) if succeed_talk?(response)
@@ -64,10 +63,9 @@ module Pandorabots
       end
 
       def set_https
-        # uri = URI(BASE_URL)
-        # (uri.host, uri.port)
-        vhttps = Net::HTTP::Persistent.new 'pb-ruby'
-        # vhttps.use_ssl = true
+        uri = URI(BASE_URL)
+        vhttps = Net::HTTP.new(uri.host, uri.port)
+        vhttps.use_ssl = true
         vhttps
       end
 
