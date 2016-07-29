@@ -49,13 +49,10 @@ module Pandorabots
       def talk(app_id, botname, input, client_name, sessionid: '', reset: false,
                trace: false, recent: false, user_key:)
         request_uri = "/talk/#{app_id}/#{botname}?input=#{input}&client_name=#{client_name}&user_key=#{user_key}"
-                      # "&sessionid=#{sessionid}&reset=#{reset}&trace=#{trace}" \ "&recent=#{recent}
-        # post_uri = URI(BASE_URL + request_uri), post_uri,
         post = Net::HTTP::Post.new(URI.escape(request_uri))
         response = https.request(post)
         response_json = JSON.parse(response.body) if succeed_talk?(response)
         response_json
-        # TalkResult.new(response.body) if succeed_talk?(response)
       end
 
       def https
@@ -70,7 +67,6 @@ module Pandorabots
       end
 
       private
-
 
       def filename(file)
         File.basename(file, '.*')
