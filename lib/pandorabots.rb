@@ -4,7 +4,9 @@ require 'json'
 
 module Pandorabots
   class API
+
     class << self
+
       BASE_URL = 'https://aiaas.pandorabots.com'
       FILE_KIND = {
         aiml: 'file', set: 'set', map: 'map', substitution: 'substitution',
@@ -44,24 +46,26 @@ module Pandorabots
         succeed_compilation?(response)
       end
 
-      def talk(app_id, botname, input, sessionid: '', reset: false,
-               trace: false, recent: true, user_key:)
-        request_uri = "/talk/#{app_id}/#{botname}?input=#{input}" \
-                      "&sessionid=#{sessionid}&reset=#{reset}&trace=#{trace}" \
-                      "&user_key=#{user_key}"
+      def talk(app_id, botname, input, client_name, user_key:)
+        request_uri = "/talk/#{app_id}/#{botname}?input=#{input}&client_name=#{client_name}&user_key=#{user_key}"
         post = Net::HTTP::Post.new(URI.escape(request_uri))
         response = https.request(post)
-        TalkResult.new(response.body) if succeed_talk?(response)
+        response_json = JSON.parse(response.body) if succeed_talk?(response)
+        response_json
+      end
+
+      def https
+        @https ||= set_https
+      end
+
+      def set_https
+        uri = URI(BASE_URL)
+        vhttps = Net::HTTP.new(uri.host, uri.port)
+        vhttps.use_ssl = true
+        vhttps
       end
 
       private
-
-      def https
-        uri = URI(BASE_URL)
-        https = Net::HTTP.new(uri.host, uri.port)
-        https.use_ssl = true
-        https
-      end
 
       def filename(file)
         File.basename(file, '.*')
