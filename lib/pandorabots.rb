@@ -46,8 +46,7 @@ module Pandorabots
         succeed_compilation?(response)
       end
 
-      def talk(app_id, botname, input, client_name, sessionid: '', reset: false,
-               trace: false, recent: false, user_key:)
+      def talk(app_id, botname, input, client_name, user_key:)
         request_uri = "/talk/#{app_id}/#{botname}?input=#{input}&client_name=#{client_name}&user_key=#{user_key}"
         post = Net::HTTP::Post.new(URI.escape(request_uri))
         response = https.request(post)
